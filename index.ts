@@ -14,7 +14,7 @@ app.use(requestMiddleware);
 app.use(serve(path.resolve(__dirname, 'static')));
 app.use(router.routes());
 
-app.on('error', (error, ctx) => {
+app.on('error', (error) => {
   console.log('app error: ', error);
 });
 
