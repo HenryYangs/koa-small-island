@@ -54,6 +54,12 @@ yarn install
 yarn run dev
 ```
 
+在浏览器输入
+```
+localhost:8080
+```
+即可看到Hello World！
+
 ### 正式环境编译
 
 ```
