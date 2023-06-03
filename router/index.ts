@@ -10,5 +10,6 @@ router.get('/', (ctx) => {
 })
 
 router.post('/start-bot', bot.start);
+router.post('/stop-bot', bot.stop);
 
 export default router;

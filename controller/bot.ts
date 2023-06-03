@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Context } from 'koa';
 import shell from 'shelljs';
+import { stop as stopBot } from '../helper/bot';
 
 export default class BotController {
   /**
@@ -67,7 +68,15 @@ export default class BotController {
     };
   }
 
-  public async stop() {
+  // 停止机器人
+  // TODO 支持多用户，停止指定机器人
+  public async stop(ctx: Context) {
+    await stopBot();
 
+    ctx.status = 200;
+    ctx.body = {
+      code: 0,
+      message: '',
+    };
   }
 }
