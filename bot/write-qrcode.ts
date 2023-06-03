@@ -7,8 +7,11 @@ import fs from 'fs';
 export const writeQRCode = (qrcodeImageUrl: string) => {
   const qrcodeFilePath = path.resolve(__dirname, '../qrcode.txt');
 
-  fs.writeFileSync(qrcodeFilePath, JSON.stringify({
-    url: qrcodeImageUrl,
-    createTime: Date.now(),
-  }));
+  fs.writeFileSync(
+    qrcodeFilePath,
+    JSON.stringify({
+      url: qrcodeImageUrl,
+      createTime: Date.now(),
+    }),
+  );
 };

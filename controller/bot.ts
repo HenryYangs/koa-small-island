@@ -16,18 +16,18 @@ export default class BotController {
       ctx.body = {
         code: 40000,
         message: 'username is required',
-      }
+      };
       return;
     }
 
     // 执行命令启动机器人
     // 暂时只支持启动一个机器人
     // TODO 支持多个机器人
-    shell.exec(`pm2 install typescript && pm2 start bot/index.ts`);
+    shell.exec('pm2 install typescript && pm2 start bot/index.ts');
 
     let content;
     const startTime = Date.now();
-    const qrcodeFilePath = path.resolve(__dirname, '../qrcode.txt')
+    const qrcodeFilePath = path.resolve(__dirname, '../qrcode.txt');
 
     // 读本地文件
     // 有就说明启动成功了
