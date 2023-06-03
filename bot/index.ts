@@ -1,13 +1,16 @@
+/**
+ * 代码结构源自官方案例：https://github.com/wechaty/getting-started/blob/main/examples/ding-dong-bot.ts
+ */
 import 'dotenv/config.js'
 import {
   Contact,
+  log,
   Message,
   ScanStatus,
-  log,
   WechatyBuilder,
 }from 'wechaty'
-
 import qrcodeTerminal from 'qrcode-terminal'
+import { writeQRCode } from './write-qrcode'
 
 function onScan (qrcode: string, status: ScanStatus) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
@@ -18,7 +21,7 @@ function onScan (qrcode: string, status: ScanStatus) {
     log.info('StarterBot', 'onScan: %s(%s) - %s', ScanStatus[status], status, qrcodeImageUrl)
 
     qrcodeTerminal.generate(qrcode, { small: true })  // show qrcode on console
-
+    writeQRCode(qrcode)
   } else {
     log.info('StarterBot', 'onScan: %s(%s)', ScanStatus[status], status)
   }
@@ -52,5 +55,4 @@ bot.on('message', onMessage)
 
 bot.start()
   .then(() => log.info('StarterBot', 'Starter Bot Started.'))
-  .catch((e: any) => log.error('StarterBot', e))
-  
+  .catch((e: any) => log.error('StarterBot', e))  
