@@ -1,4 +1,4 @@
 node_modules
 *-error.log
-small-island-bot.memory-card.json
+*.memory-card.json
 *.txt

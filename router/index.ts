@@ -9,7 +9,7 @@ router.get('/', (ctx) => {
   ctx.body = 'Hello World!';
 });
 
-router.post('/start-bot', bot.start);
+router.post('/start-bot', ctx => bot.start(ctx));
 router.post('/stop-bot', bot.stop);
 
 export default router;
