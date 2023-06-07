@@ -13,7 +13,8 @@
     "postinstall": "husky install",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable",
-    "validate-branch-name": "validate-branch-name"
+    "validate-branch-name": "validate-branch-name",
+    "find-deadcode": "ts-prune -e --ignore \".husky\""
   },
   "dependencies": {
     "dotenv": "^16.0.3",
@@ -43,6 +44,7 @@
     "husky": "^8.0.3",
     "pinst": "^3.0.0",
     "ts-node": "^10.9.1",
+    "ts-prune": "^0.10.3",
     "typescript": "^5.1.3",
     "validate-branch-name": "^1.3.0"
   },
