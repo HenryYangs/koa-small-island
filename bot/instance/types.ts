@@ -1,3 +1,4 @@
+import { IBot } from '../pool/types';
 import { EBotOpType } from '../types';
 
 // 接收 message 事件消息的类型
@@ -6,8 +7,5 @@ export interface IBotMsgProps {
   type: EBotOpType;
 
   // 具体数据
-  data: {
-    // 机器人名称
-    name: string,
-  };
+  data: IBot;
 }

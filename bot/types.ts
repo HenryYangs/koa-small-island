@@ -2,7 +2,7 @@
 export enum EBotOpType {
   CREATE = 'create', // 新增
   PAUSE = 'pause', // 暂停
-  RESUME = 'resume', // 恢复
+  START = 'start', // 启动
   STOP = 'stop', // 停止
   DELETE = 'delete', // 删除
 }

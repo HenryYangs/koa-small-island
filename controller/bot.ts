@@ -3,7 +3,6 @@
 import { Context } from 'koa';
 // import shell from 'shelljs';
 import { BotPool } from '../bot/pool';
-import { stop as stopBot } from '../helper/bot';
 
 export default class BotController {
   private botPool: BotPool;
@@ -13,12 +12,13 @@ export default class BotController {
   }
 
   /**
-   * 启动机器人
+   * 创建机器人
    */
-  public async start(ctx: Context) {
+  public async create(ctx: Context) {
     const { username } = ctx.request.body || {};
 
     if (!username) {
+      // TODO log
       ctx.status = 400;
       ctx.body = {
         code: 40000,
@@ -27,22 +27,44 @@ export default class BotController {
       return;
     }
 
-    await this.botPool.createBot()
-
-    // ctx.status = 200;
-    // ctx.body = {
-    //   code: 0,
-    //   data: {
-    //     qrcode: content.url,
-    //   },
-    //   message: '',
-    // };
+    let data;
+    try {
+      data = await this.botPool.createBot()
+    } catch {
+      // TODO log
+      ctx.status = 500;
+      return;
+    }
+  
+    ctx.status = 200;
+    ctx.body = {
+      code: 0,
+      data,
+      message: '',
+    };
   }
 
   // 停止机器人
-  // TODO 支持多用户，停止指定机器人
   public async stop(ctx: Context) {
-    await stopBot();
+    const { pid } = ctx.request.body || {};
+
+    if (!pid) {
+      ctx.status = 400;
+      ctx.body = {
+        code: 40000,
+        message: 'pid is required',
+      };
+      return;
+    }
+
+    try {
+      await this.botPool.stopBot(pid);
+    } catch (error) {
+      // TODO log
+      console.log('error=====', error)
+      ctx.status = 500;
+      return;
+    }
 
     ctx.status = 200;
     ctx.body = {

@@ -1,5 +1,6 @@
+import { IBot } from '../pool/types';
 import { EOpType } from '../../types/operations';
-import { EBotOpType } from '../types';
+import { EBotOpType, EBotStatusType } from '../types';
 import { create } from './create';
 import { IBotMsgProps } from './types';
 
@@ -9,25 +10,25 @@ import { IBotMsgProps } from './types';
 
 // 监听进程的 message 事件
 process.on('message', (message: IBotMsgProps) => {
-  const { type, data: { name } } = message;
+  const { type, data } = message;
   const botOpMap: Record<EBotOpType, Function> = {
     [EBotOpType.CREATE]: createBot,
+    [EBotOpType.START]: () => {},
+    [EBotOpType.STOP]: stopBot,
     [EBotOpType.PAUSE]: () => {},
-    [EBotOpType.RESUME]: () => {},
-    [EBotOpType.STOP]: () => {},
     [EBotOpType.DELETE]: () => {},
   };
 
   if (!botOpMap[type]) return;
 
-  botOpMap[type](name);
+  botOpMap[type](data);
 });
 
 // 创建机器人
-function createBot(name: string) {
+function createBot({ name }: IBot) {
   // 操作结果事件的公共参数
   const eventProps = {
-    type: EBotOpType.CREATE,
+    type: EBotStatusType.CREATED,
     data: { pid: process.pid },
   };
 
@@ -40,10 +41,36 @@ function createBot(name: string) {
       });
     })
     .catch((error) => {
+      // TODO log
       console.log('create error======', error);
       process.send?.({
         ...eventProps,
         status: EOpType.FAIL,
+        message: error?.message,
       });
     });
+}
+
+// 停止机器人
+function stopBot({ bot, pid }: IBot) {
+  const eventProps = {
+    type: EBotStatusType.STOPPED,
+    data: { pid },
+  };
+
+  // 调用 wechaty 实例的 stop 函数
+  bot?.stop()
+    .then(() => {
+      process.send?.({
+        ...eventProps,
+        status: EOpType.SUCCESS,
+      });
+    })
+    .catch((error) => {
+      process.send?.({
+        ...eventProps,
+        status: EOpType.FAIL,
+        message: error?.message,
+      });
+    })
 }
