@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import fs from 'fs';
 import path from 'path';
 import { ChildProcess, fork } from 'child_process';
 import { EBotOpType, EBotStatusType } from '../types';
@@ -13,7 +14,9 @@ export class BotPool extends EventEmitter {
     this.pool = new Map();
   }
 
-  // 创建机器人、更新机器人进程池
+  /**
+   * 创建机器人、更新机器人进程池
+   */
   public async createBot() {
     // 新开进程
     const child = fork(path.resolve(__dirname, '../instance/index.ts'));
@@ -85,7 +88,9 @@ export class BotPool extends EventEmitter {
     });
   }
 
-  // 删除机器人
+  /**
+   * 删除机器人
+   */
   public deleteBot(pid: number) {
     const botInstance = this.pool.get(pid);
 
@@ -107,12 +112,38 @@ export class BotPool extends EventEmitter {
 
     // 杀进程
     botInstance.child.kill();
+    // 删除机器人的配置文件
+    fs.rmSync(path.resolve(__dirname, `../../${botInstance.name}.memory-card.json`));
     // 从进程池中删掉对应的进程
     this.pool.delete(pid);
 
     return {
       code: 0,
       message: '',
+    };
+  }
+
+  /**
+   * 查询机器人的静态属性
+   */
+  public getBotStaticAttr(pid: number) {
+    const botInstance = this.pool.get(pid);
+
+    if (!botInstance || !botInstance.child) {
+      // TODO log
+      return {
+        code: 400001,
+        message: 'bot is not found',
+      };
+    }
+
+    return {
+      code: 0,
+      data: {
+        pid,
+        name: botInstance.name,
+        status: botInstance.status,
+      },
     };
   }
 

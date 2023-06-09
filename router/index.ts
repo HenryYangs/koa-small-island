@@ -12,5 +12,6 @@ router.get('/', (ctx) => {
 router.post('/bot/create', ctx => bot.create(ctx));
 router.post('/bot/stop', ctx => bot.stop(ctx));
 router.post('/bot/delete', ctx => bot.delete(ctx));
+router.get('/bot', ctx => bot.index(ctx))
 
 export default router;
