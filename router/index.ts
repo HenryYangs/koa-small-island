@@ -10,8 +10,12 @@ router.get('/', (ctx) => {
 });
 
 router.post('/bot/create', ctx => bot.create(ctx));
+router.post('/bot/start', ctx => bot.start(ctx));
 router.post('/bot/stop', ctx => bot.stop(ctx));
 router.post('/bot/delete', ctx => bot.delete(ctx));
-router.get('/bot', ctx => bot.index(ctx))
+
+router.get('/bot', ctx => bot.index(ctx));
+router.get('/bot/list', ctx => bot.list(ctx));
+router.get('/bot/qrcode', ctx => bot.qrcode(ctx));
 
 export default router;

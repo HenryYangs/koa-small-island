@@ -42,6 +42,38 @@ export default class BotController {
   }
 
   /**
+   * 启动机器人
+   */
+  public async start(ctx: Context) {
+    const { pid } = ctx.request.body || {};
+
+    if (!pid) {
+      // TODO log
+      ctx.status = 400;
+      ctx.body = {
+        code: 40000,
+        message: 'pid is required',
+      };
+      return;
+    }
+
+    try {
+      await this.botPool.startBot(pid);
+    } catch (error) {
+      // TODO log
+      console.log('error=====', error)
+      ctx.status = 500;
+      return;
+    }
+
+    ctx.status = 200;
+    ctx.body = {
+      code: 0,
+      message: '',
+    };
+  }
+
+  /**
    * 停止机器人
    */
   public async stop(ctx: Context) {
@@ -133,5 +165,26 @@ export default class BotController {
         message: '',
       };
     }
+  }
+
+  /**
+   * 查询机器人列表
+   * 一期先查所有机器人
+   */
+  public list(ctx: Context) {
+    // TODO 条件筛选、分页
+    // const { page, pageSize, pid, name, status } = ctx.query || {};
+    const result = this.botPool.getBotList();
+
+    ctx.status = 200;
+    ctx.body = {
+      code: 0,
+      data: result,
+      message: '',
+    };
+  }
+
+  public qrcode(ctx: Context) {
+    ctx.status = 200
   }
 }

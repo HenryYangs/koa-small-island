@@ -55,6 +55,40 @@ export class BotPool extends EventEmitter {
   }
 
   /**
+   * 启动机器人
+   */
+  public async startBot(pid: number) {
+    return new Promise((resolve, reject) => {
+      const botInstance = this.pool.get(pid);
+      
+      if (!botInstance || !botInstance.child) {
+        reject(new Error(JSON.stringify({
+          code: 40001,
+        })));
+        return;
+      }
+      
+      const { child } = botInstance;
+
+      child.send({
+        type: EBotOpType.START,
+        data: botInstance,
+      });
+      child.once('message', (message: IBotStatusEventMsgProps) => {
+        if (message.type === EBotStatusType.RUNNING && message.status === EOpType.SUCCESS) {
+          botInstance.status = EBotStatusType.RUNNING;
+          resolve(pid);
+        } else {
+          reject(new Error(JSON.stringify({
+            code: 500001,
+            message: message.message || 'start bot fail',
+          })));
+        }
+      })
+    });
+  }
+
+  /**
    * 停止机器人
    */
   public async stopBot(pid: number) {
@@ -145,6 +179,24 @@ export class BotPool extends EventEmitter {
         status: botInstance.status,
       },
     };
+  }
+
+  /**
+   * 查询机器人列表
+   */
+  public getBotList() {
+    const result = [];
+
+    for (let bot of this.pool) {
+      const [, value] = bot;
+      const { pid, name, status } = value;
+
+      result.push({
+        pid, name, status,
+      });
+    }
+
+    return result;
   }
 
   /**
