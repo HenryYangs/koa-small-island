@@ -1,7 +1,4 @@
-// import fs from 'fs';
-// import path from 'path';
 import { Context } from 'koa';
-// import shell from 'shelljs';
 import { BotPool } from '../bot/pool';
 
 export default class BotController {
@@ -49,6 +46,7 @@ export default class BotController {
     const { pid } = ctx.request.body || {};
 
     if (!pid) {
+      // TODO log
       ctx.status = 400;
       ctx.body = {
         code: 40000,
@@ -71,5 +69,33 @@ export default class BotController {
       code: 0,
       message: '',
     };
+  }
+
+  // 删除机器人
+  public async delete(ctx: Context) {
+    const { pid } = ctx.request.body || {};
+
+    if (!pid) {
+      // TODO log
+      ctx.status = 400;
+      ctx.body = {
+        code: 40000,
+        message: 'pid is required',
+      };
+      return;
+    }
+
+    const result = this.botPool.deleteBot(pid);
+    
+    if (result.code) {
+      ctx.status = 200;
+      ctx.body = result;
+    } else {
+      ctx.status = 200;
+      ctx.body = {
+        code: 0,
+        message: '',
+      };
+    }
   }
 }

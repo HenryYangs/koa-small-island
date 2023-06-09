@@ -78,11 +78,42 @@ export class BotPool extends EventEmitter {
         } else {
           reject(new Error(JSON.stringify({
             code: 500001,
-            message: message.message || '机器人停止失败',
+            message: message.message || 'stop bot fail',
           })));
         }
       })
     });
+  }
+
+  // 删除机器人
+  public deleteBot(pid: number) {
+    const botInstance = this.pool.get(pid);
+
+    if (!botInstance || !botInstance.child) {
+      // TODO log
+      return {
+        code: 400001,
+        message: 'bot is not found',
+      };
+    }
+
+    // 机器人必须先停止，再删除
+    if (botInstance.status !== EBotStatusType.STOPPED) {
+      return {
+        code: 400002,
+        message: 'bot should be stopped',
+      };
+    }
+
+    // 杀进程
+    botInstance.child.kill();
+    // 从进程池中删掉对应的进程
+    this.pool.delete(pid);
+
+    return {
+      code: 0,
+      message: '',
+    };
   }
 
   /**
@@ -99,7 +130,6 @@ export class BotPool extends EventEmitter {
         [EBotStatusType.STOPPED]: this.onStopped,
         // TODO
         [EBotStatusType.RUNNING]: () => {},
-        [EBotStatusType.PAUSED]: () => {},
         [EBotStatusType.DELETED]: () => {},
       }
 

@@ -8,14 +8,13 @@ import { IBotMsgProps } from './types';
  * 机器人实例，通过 fork 子进程的方式运行
  */
 
-// 监听进程的 message 事件
+// 监听进程的 message 事件，对于每一个机器人，需要监听对应的操作事件
 process.on('message', (message: IBotMsgProps) => {
   const { type, data } = message;
   const botOpMap: Record<EBotOpType, Function> = {
     [EBotOpType.CREATE]: createBot,
     [EBotOpType.START]: () => {},
     [EBotOpType.STOP]: stopBot,
-    [EBotOpType.PAUSE]: () => {},
     [EBotOpType.DELETE]: () => {},
   };
 
