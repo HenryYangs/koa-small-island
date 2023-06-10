@@ -184,7 +184,26 @@ export default class BotController {
     };
   }
 
+  /**
+   * 查询机器人的登录二维码
+   */
   public qrcode(ctx: Context) {
-    ctx.status = 200
+    const { pid } = ctx.query || {};
+    const numPid = Number(pid);
+
+    if (!numPid) {
+      // TODO log
+      ctx.status = 400;
+      ctx.body = {
+        code: 40000,
+        message: 'pid is required',
+      };
+      return;
+    }
+
+    const result = this.botPool.getQRCode(numPid);
+
+    ctx.status = 200;
+    ctx.body = result;
   }
 }

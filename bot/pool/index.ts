@@ -2,9 +2,10 @@ import EventEmitter from 'events';
 import fs from 'fs';
 import path from 'path';
 import { ChildProcess, fork } from 'child_process';
-import { EBotOpType, EBotStatusType } from '../types';
+import { ScanStatus } from 'wechaty';
+import { EBotOpType, EBotStatusType, EWechatyOpType } from '../types';
 import { EOpType } from '../../types/operations';
-import { IBot, IBotStatusEventMsgProps } from './types';
+import { IBot, IBotStatusEventMsgProps, IWechatyEventMsgProps } from './types';
 
 export class BotPool extends EventEmitter {
   private pool: Map<number, IBot>;
@@ -35,6 +36,8 @@ export class BotPool extends EventEmitter {
       pid,
       child,
       name,
+      qrcode: '',
+      scanStatus: ScanStatus.Unknown,
     };
 
     // 向子进程发送事件创建机器人
@@ -200,20 +203,41 @@ export class BotPool extends EventEmitter {
   }
 
   /**
-   * 监听机器人状态改变的事件，修改对应进程相关的状态和字段
+   * 查询机器人的登录二维码
+   */
+  public getQRCode(pid: number) {
+    const botInstance = this.pool.get(pid);
+
+    if (!botInstance || !botInstance.child) {
+      // TODO log
+      return {
+        code: 400001,
+        message: 'bot is not found',
+      };
+    }
+
+    return {
+      code: 0,
+      data: { qrcode: botInstance.qrcode },
+      message: '',
+    };
+  }
+
+  /**
+   * 监听对 wechaty 操作的事件
    */
   private addEventListener(child: ChildProcess) {
     const { pid } = child;
 
     // 子进程监听 message 事件
-    child.on('message', (message: IBotStatusEventMsgProps) => {
+    child.on('message', (message: IWechatyEventMsgProps) => {
       const { type } = message;
-      const botOpMap: Record<EBotStatusType, Function> = {
-        [EBotStatusType.CREATED]: this.onCreated,
-        [EBotStatusType.STOPPED]: this.onStopped,
+      const botOpMap: Record<EWechatyOpType, Function> = {
+        [EWechatyOpType.CREATE]: this.onCreated,
+        [EWechatyOpType.SCAN]: this.onScanned,
         // TODO
-        [EBotStatusType.RUNNING]: () => {},
-        [EBotStatusType.DELETED]: () => {},
+        [EWechatyOpType.LOGIN]: () => {},
+        [EWechatyOpType.LOGOUT]: () => {},
       }
 
       if (!botOpMap[type] || !pid) {
@@ -229,8 +253,8 @@ export class BotPool extends EventEmitter {
    * 机器人创建成功的回调函数
    * 更新机器人的状态
    */
-  private onCreated(message: IBotStatusEventMsgProps, botInstance: IBot) {
-    const { status, data: { bot } } = message;
+  private onCreated(message: IWechatyEventMsgProps, botInstance: IBot) {
+    const { status, bot } = message.data;
 
     botInstance.bot = bot;
 
@@ -241,7 +265,13 @@ export class BotPool extends EventEmitter {
     }
   }
 
-  private onStopped() {
-// message: IBotStatusEventMsgProps, botInstance: IBot
+  /**
+   * wechaty 二维码扫描事件
+   */
+  private onScanned(message: IWechatyEventMsgProps, botInstance: IBot) {
+    const { scanStatus = ScanStatus.Unknown, qrcode = '' } = message.data;
+
+    botInstance.qrcode = qrcode;
+    botInstance.scanStatus = scanStatus;
   }
 }

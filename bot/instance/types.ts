@@ -9,3 +9,8 @@ export interface IBotMsgProps {
   // 具体数据
   data: IBot;
 }
+
+export interface ICreateProps {
+  pid: number;
+  name: string;
+}

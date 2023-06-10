@@ -1,0 +1,6 @@
+{
+  "watch": ["bot", "controller", "helper", "middleware", "router", "types"],
+  "ext": "ts,json",
+  "ignore": [".husky"],
+  "exec": "ts-node index.ts"
+}

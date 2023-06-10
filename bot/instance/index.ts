@@ -23,7 +23,7 @@ process.on('message', (message: IBotMsgProps) => {
 });
 
 // 创建机器人
-function createBot({ name }: IBot) {
+function createBot({ pid, name }: IBot) {
   // 操作结果事件的公共参数
   const eventProps = {
     type: EBotStatusType.CREATED,
@@ -31,7 +31,7 @@ function createBot({ name }: IBot) {
   };
 
   // 调用 wechaty 创建机器人
-  create(name)
+  create({ pid, name })
     .then(() => {
       process.send?.({
         ...eventProps,
