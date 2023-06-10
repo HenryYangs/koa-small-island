@@ -29,6 +29,8 @@ const config = {
     '@typescript-eslint/explicit-member-accessibility': 2,
     complexity: ['error', 10],
     "linebreak-style": ['off', 'windows'],
+    "quotes": ["error", "single"],
+    "semi": ["error", "never"]
   },
 };
 
