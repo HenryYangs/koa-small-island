@@ -1,3 +1,5 @@
 node_modules
 dist
 .eslintrc.js
+commitlint.config.js
+tsconfig.json
