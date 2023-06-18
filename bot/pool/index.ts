@@ -18,7 +18,7 @@ export class BotPool extends EventEmitter {
   /**
    * 创建机器人、更新机器人进程池
    */
-  public async createBot() {
+  public async createBot(username: string) {
     // 新开进程
     const child = fork(path.resolve(__dirname, '../instance/index.ts'));
     const { pid } = child;
@@ -31,7 +31,7 @@ export class BotPool extends EventEmitter {
     // 子进程监听事件
     this.addEventListener(child);
 
-    const name = `bot_${pid}`;
+    const name = `bot_${username}_${pid}`;
     const base = {
       pid,
       child,

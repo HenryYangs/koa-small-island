@@ -26,7 +26,7 @@ export default class BotController {
 
     let data;
     try {
-      data = await this.botPool.createBot()
+      data = await this.botPool.createBot(username)
     } catch {
       // TODO log
       ctx.status = 500;
