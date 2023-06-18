@@ -188,7 +188,8 @@ export class BotPool extends EventEmitter {
    * 查询机器人列表
    */
   public getBotList() {
-    const result = [];
+    // TODO
+    const result: { pid: number, name: string, status: EBotStatusType }[] = [];
 
     for (let bot of this.pool) {
       const [, value] = bot;
