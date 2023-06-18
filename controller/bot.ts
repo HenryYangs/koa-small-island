@@ -12,7 +12,8 @@ export default class BotController {
    * 创建机器人
    */
   public async create(ctx: Context) {
-    const { username } = ctx.request.body || {};
+    // TODO
+    const { username } = (ctx.request.body || { username: '' }) as { username: string };
 
     if (!username) {
       // TODO log
@@ -45,7 +46,8 @@ export default class BotController {
    * 启动机器人
    */
   public async start(ctx: Context) {
-    const { pid } = ctx.request.body || {};
+    // TODO
+    const { pid } = (ctx.request.body || { pid: 0 }) as { pid: number };
 
     if (!pid) {
       // TODO log
@@ -77,7 +79,8 @@ export default class BotController {
    * 停止机器人
    */
   public async stop(ctx: Context) {
-    const { pid } = ctx.request.body || {};
+    // TODO
+    const { pid } = (ctx.request.body || { pid: 0 }) as { pid: number };
 
     if (!pid) {
       // TODO log
@@ -109,7 +112,8 @@ export default class BotController {
    * 删除机器人
    */
   public async delete(ctx: Context) {
-    const { pid } = ctx.request.body || {};
+    // TODO
+    const { pid } = (ctx.request.body || { pid: 0 }) as { pid: number };
 
     if (!pid) {
       // TODO log
