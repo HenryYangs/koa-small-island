@@ -17,10 +17,7 @@
     "baseUrl": ".",
     "paths": {},
     "resolveJsonModule": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "exclude": [
-    "node_modules",
-    ".eslintrc.js"
-  ]
+  "exclude": ["node_modules", ".eslintrc.js"]
 }

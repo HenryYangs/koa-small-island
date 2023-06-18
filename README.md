@@ -25,17 +25,16 @@
 - `service`：路由服务目录，处理和数据库相关的交互
 - `middleware`：中间件目录，`Koa`的核心思想，洋葱模型，参考[官方文档](https://koajs.com/#application)
 
-
 ## 项目配置
 
-### Lint工具
+### Lint 工具
 
 - eslint，配置参考`.eslintrc.js`
 
-### commit校验工具
+### commit 校验工具
 
-- husky，git钩子工具，[官方文档](https://typicode.github.io/husky/)，配置参考`.husky`目录
-- commitlint，git提交信息校验工具，[官方文档](https://commitlint.js.org/#/)，配置参考`commitlint.config.js`；建议使用`git commit -m ':tada: 初始化项目'`的格式，当前强校验前缀，前缀内容参考[gitmoji](https://gitmoji.carloscuesta.me/)
+- husky，git 钩子工具，[官方文档](https://typicode.github.io/husky/)，配置参考`.husky`目录
+- commitlint，git 提交信息校验工具，[官方文档](https://commitlint.js.org/#/)，配置参考`commitlint.config.js`；建议使用`git commit -m ':tada: 初始化项目'`的格式，当前强校验前缀，前缀内容参考[gitmoji](https://gitmoji.carloscuesta.me/)
 - validate-branch-name，分支名校验工具，[官方文档](https://github.com/JsonMa/validate-branch-name)，当前强校验分支名必须以`feature`或`bugfix`开头，例如：`feature/test`
 
 ## 开发
@@ -55,10 +54,12 @@ yarn run dev
 ```
 
 在浏览器输入
+
 ```
 localhost:8080
 ```
-即可看到Hello World！
+
+即可看到 Hello World！
 
 ### 正式环境编译
 

@@ -1,2 +1,4 @@
 node_modules
 *-error.log
+*.memory-card.json
+*.txt
