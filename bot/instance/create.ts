@@ -2,7 +2,7 @@ import { WechatyBuilder } from 'wechaty';
 import { WechatyInterface } from 'wechaty/impls';
 import { QRCode } from '../plugins/qrcode';
 import { EOpType } from '../../types/operations';
-import { EWechatyOpType } from '../types';
+import { EBotOpType  } from '../types';
 import { ICreateProps } from './types';
 
 // 调用 wechaty 的 api 创建机器人
@@ -17,7 +17,7 @@ export const create = async ({ pid, name }: ICreateProps): Promise<WechatyInterf
   botInstance.use(QRCode({
     callback: ({ qrcode, status }) => {
       process.send?.({
-        type: EWechatyOpType.SCAN,
+        type: EBotOpType.SCAN,
         data: {
           pid,
           qrcode,

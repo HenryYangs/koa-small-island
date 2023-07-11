@@ -2,14 +2,14 @@ import { ScanStatus, Wechaty, WechatyPlugin } from 'wechaty';
 import qrTerminal from 'qrcode-terminal';
 import { isDev } from '../../helper/env';
 
-export interface IQRCodeCallbackProps {
+interface IQRCodeCallbackProps {
   qrcode: string;
 
   // 扫码状态
   status: ScanStatus;
 }
 
-export interface IQRCodeProps {
+interface IQRCodeProps {
   small?: boolean;
   callback?: ({ qrcode, status }: IQRCodeCallbackProps) => void;
 }

@@ -2,7 +2,7 @@ import { ChildProcess } from 'child_process';
 import { WechatyInterface } from 'wechaty/impls';
 import { ScanStatus } from 'wechaty';
 import { EOpType } from '../../types/operations';
-import { EBotStatusType, EWechatyOpType } from '../types';
+import { EBotOpType, EBotStatusType } from '../types';
 
 // 进程池中，机器人所需要的类型字段
 export interface IBot {
@@ -35,11 +35,11 @@ export interface IBotStatusEventMsgProps {
 
   // 具体数据
   data: {
-    // 进程名
-    name: string,
-    
-    // wechaty 实例
-    bot?: WechatyInterface;
+    // 进程 id
+    pid: string,
+
+    // 操作状态
+    status: EOpType;
   };
 
   // 状态改变的最终结果
@@ -51,7 +51,7 @@ export interface IBotStatusEventMsgProps {
 // wechaty 触发的事件的消息结构
 export interface IWechatyEventMsgProps {
   // 状态改变的类型
-  type: EWechatyOpType;
+  type: EBotOpType;
 
   // 具体数据
   data: {
