@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { ChildProcess, fork } from 'child_process';
 import { ScanStatus } from 'wechaty';
-import { EBotOpType, EBotStatusType, EWechatyOpType } from '../types';
+import { EBotOpType, EBotStatusType } from '../types';
 import { EOpType } from '../../types/operations';
 import { IBot, IBotStatusEventMsgProps, IWechatyEventMsgProps } from './types';
 
@@ -78,7 +78,7 @@ export class BotPool extends EventEmitter {
         data: botInstance,
       });
       child.once('message', (message: IBotStatusEventMsgProps) => {
-        if (message.type === EBotStatusType.RUNNING && message.status === EOpType.SUCCESS) {
+        if (message.type === EBotStatusType.RUNNING && message.data.status === EOpType.SUCCESS) {
           botInstance.status = EBotStatusType.RUNNING;
           resolve(pid);
         } else {
@@ -112,7 +112,7 @@ export class BotPool extends EventEmitter {
         data: botInstance,
       });
       child.once('message', (message: IBotStatusEventMsgProps) => {
-        if (message.type === EBotStatusType.STOPPED && message.status === EOpType.SUCCESS) {
+        if (message.type === EBotStatusType.STOPPED && message.data.status === EOpType.SUCCESS) {
           botInstance.status = EBotStatusType.STOPPED;
           resolve(pid);
         } else {
@@ -233,12 +233,14 @@ export class BotPool extends EventEmitter {
     // 子进程监听 message 事件
     child.on('message', (message: IWechatyEventMsgProps) => {
       const { type } = message;
-      const botOpMap: Record<EWechatyOpType, Function> = {
-        [EWechatyOpType.CREATE]: this.onCreated,
-        [EWechatyOpType.SCAN]: this.onScanned,
+      const botOpMap: Record<EBotOpType, Function> = {
+        [EBotOpType.CREATE]: this.onCreated,
+        [EBotOpType.START]: () => {},
+        [EBotOpType.STOP]: () => {},
+        [EBotOpType.SCAN]: this.onScanned,
         // TODO
-        [EWechatyOpType.LOGIN]: () => {},
-        [EWechatyOpType.LOGOUT]: () => {},
+        [EBotOpType.LOGIN]: () => {},
+        [EBotOpType.LOGOUT]: () => {},
       }
 
       if (!botOpMap[type] || !pid) {
@@ -255,9 +257,7 @@ export class BotPool extends EventEmitter {
    * 更新机器人的状态
    */
   private onCreated(message: IWechatyEventMsgProps, botInstance: IBot) {
-    const { status, bot } = message.data;
-
-    botInstance.bot = bot;
+    const { status } = message.data;
 
     if (status === EOpType.SUCCESS) {
       botInstance.status = EBotStatusType.RUNNING;
