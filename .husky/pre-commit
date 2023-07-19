@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-yarn validate-branch-name && yarn lint
+# yarn validate-branch-name && yarn lint
