@@ -61,8 +61,71 @@ localhost:8080
 
 即可看到 Hello World！
 
+
+#### 机器人 API 使用
+使用 postman 传参测试，推荐 Json 格式
+
+创建机器人
+http://localhost:8080/bot/create
+必传 username String 不可为空
+
+```json
+{
+    "username":"[username]"
+}
+```
+
+查询机器人（当前只有全量查询）
+http://localhost:8080/bot/list
+
+
+
+二维码打印（可微信扫码）
+
+http://localhost:8080/bot/index
+
+pid int 字段必传，全局唯一，创建时生成
+
+```
+        {
+            "pid": 272
+        }
+```
+
+还需要适配，不可用
+
+
+启动机器人
+http://localhost:8080/bot/start
+pid int 字段必传，全局唯一，创建时生成
+```
+        {
+            "pid": 272
+        }
+```
+
+停止机器人
+http://localhost:8080/bot/stop
+pid int 字段必传，全局唯一，创建时生成
+
+```
+        {
+            "pid": 272
+        }
+```
+
+删除机器人
+http://localhost:8080/bot/delete
+pid int 字段必传，全局唯一，创建时生成
+```
+        {
+            "pid": 272
+        }
+```
+
 ### 正式环境编译
 
 ```
 yarn run build
 ```
+
