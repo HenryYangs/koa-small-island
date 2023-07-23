@@ -9,10 +9,12 @@ import { IBot, IBotStatusEventMsgProps, IWechatyEventMsgProps } from './types';
 
 export class BotPool extends EventEmitter {
   private pool: Map<number, IBot>;
+  private responseRecords: Map<number, Array<unknown>>;
 
   public constructor() {
     super();
     this.pool = new Map();
+    this.responseRecords = new Map();
   }
 
   /**
@@ -275,4 +277,26 @@ export class BotPool extends EventEmitter {
     botInstance.qrcode = qrcode;
     botInstance.scanStatus = scanStatus;
   }
+
+
+  /**
+   * 根据机器人 pid 存储对应的响应数据
+   * @param pid 唯一识别 id.
+   * @param data 请求接口的返回数据.
+   */
+    public storeResponseData(pid: number, data: unknown) {
+      const records = this.responseRecords.get(pid) || [];
+      records.push(data);
+      this.responseRecords.set(pid, records);
+    }
+
+  /**
+   * 根据 pid 获取请求历史返回数据.
+   @param pid 唯一识别 id.
+   * @param data 请求接口的返回数据.
+   */
+    public getResponseRecords(pid: number) {
+      return this.responseRecords.get(pid) || [];
+    }
+  
 }

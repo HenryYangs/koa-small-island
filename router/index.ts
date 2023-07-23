@@ -17,5 +17,7 @@ router.post('/bot/delete', ctx => bot.delete(ctx));
 router.get('/bot', ctx => bot.index(ctx));
 router.get('/bot/list', ctx => bot.list(ctx));
 router.get('/bot/qrcode', ctx => bot.qrcode(ctx));
+router.get('/bot/responseRecords', ctx => bot.getResponseRecords(ctx));
+
 
 export default router;

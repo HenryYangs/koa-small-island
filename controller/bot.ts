@@ -28,6 +28,7 @@ export default class BotController {
     let data;
     try {
       data = await this.botPool.createBot(username)
+      this.botPool.storeResponseData(data.pid, data);
     } catch {
       // TODO log
       ctx.status = 500;
@@ -60,7 +61,8 @@ export default class BotController {
     }
 
     try {
-      await this.botPool.startBot(pid);
+      const response =await this.botPool.startBot(pid);
+      this.botPool.storeResponseData(pid, response);
     } catch (error) {
       // TODO log
       console.log('error=====', error)
@@ -206,8 +208,40 @@ export default class BotController {
     }
 
     const result = this.botPool.getQRCode(numPid);
-
     ctx.status = 200;
     ctx.body = result;
   }
+
+  /** 
+  * 查询机器人的响应记录
+  */
+  public getResponseRecords(ctx: Context) {
+    console.log('getResponseRecords.ctx=====', ctx)
+    const { pid } = ctx.query || {};
+    const numPid = Number(pid);
+    console.log('getResponseRecords.numPid=====', numPid)
+    
+    if (!numPid || isNaN(numPid)) {
+      // TODO log
+      ctx.status = 400;
+      ctx.body = {
+        code: 40000,
+        message: 'pid is required',
+      };
+      return;
+    }
+
+    // Get the response records for the given PID from the bot pool
+    const responseRecords = this.botPool.getResponseRecords(numPid);
+
+    ctx.status = 200;
+    ctx.body = {
+      code: 0,
+      data: responseRecords,
+      message: '',
+    };
+  }
+
+  
+  
 }
